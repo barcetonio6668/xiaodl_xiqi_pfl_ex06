@@ -1,0 +1,201 @@
+# Course Project Report
+
+# Sentiment Analysis of Two Shakespeare Characters Using Flair and GPT Chat Completion API
+
+# PfL, Fall Semester 2025
+
+# Submitted by Liu Xiaoduan 23-749-609, Qi Xinyan 23-757-511
+
+
+2.1.2 Manual Evaluation
+
+#Agreement and disagreement scores for both sentiment and emotion labels
+
+	Agreement score for emotion and sentiment labels: 39/100=0.39
+
+	Disagreement score for emotion and sentiment labels: 61/100=0.61
+
+	# we totally analyze 100 sentences manually
+
+
+
+2.1.3 Numerical Evaluation of Automatic Sentiment/Emotion Results
+
+#The number of positive, negative, and neutral sentences per character：
+
+ 	KING CLAUDIUS: {'positive': 92, 'negative': 151, 'neutral': 150}
+
+ 	HAMLET: {'positive': 212, 'negative': 485, 'neutral': 355}
+
+#Sentiment distribution across acts
+
+ 	ACT I: {'positive': 64, 'negative': 99, 'neutral': 92}
+
+ 	ACT II: {'positive': 64, 'negative': 100, 'neutral': 68}
+
+ 	ACT III: {'positive': 74, 'negative': 214, 'neutral': 129}
+
+ 	ACT IV: {'positive': 55, 'negative': 110, 'neutral': 111}
+
+ 	ACT V: {'positive': 47, 'negative': 113, 'neutral': 105}
+
+#sentiment distribution across scenes
+
+ 	SCENE II. A room of state in the castle.: {'positive': 32, 'negative': 57, 'neutral': 45}
+
+ 	SCENE II. A room in the castle.: {'positive': 64, 'negative': 100, 'neutral': 68}
+
+ 	SCENE I. A room in the castle.: {'positive': 14, 'negative': 70, 'neutral': 34}
+
+ 	SCENE II. A hall in the castle.: {'positive': 64, 'negative': 135, 'neutral': 136}
+
+ 	SCENE III. A room in the castle.: {'positive': 7, 'negative': 28, 'neutral': 10}
+
+ 	SCENE III. Another room in the castle.: {'positive': 8, 'negative': 18, 'neutral': 23}
+
+ 	SCENE V. Elsinore. A room in the castle.: {'positive': 11, 'negative': 24, 'neutral': 15}
+
+ 	SCENE VII. Another room in the castle.: {'positive': 23, 'negative': 34, 'neutral': 48}
+
+ 	SCENE I. A churchyard.: {'positive': 14, 'negative': 48, 'neutral': 30}
+
+ 	SCENE IV. The platform.: {'positive': 12, 'negative': 22, 'neutral': 15}
+
+ 	SCENE V. Another part of the platform.: {'positive': 20, 'negative': 20, 'neutral': 32}
+
+ 	SCENE IV. The Queen's closet.: {'positive': 26, 'negative': 58, 'neutral': 28}
+
+ 	SCENE II. Another room in the castle.: {'positive': 4, 'negative': 6, 'neutral': 7}
+
+ 	SCENE IV. A plain in Denmark.: {'positive': 5, 'negative': 16, 'neutral': 14}
+
+#The number of highly emotional sentences (flair confidence ≥ 0.90)
+
+ 	Original jason file’s result from Part1: 1489+547 = 2036
+
+ 	Total number count for debugging in the step of ChatGPT API sentiment analysis:
+
+ 	KING total: 393 HAMLET total: 1052 393+1052 = 1445
+
+	The reduction is theoretically unreasonable because they should remain the same. However, the 1445 is consistent with the Excel file output, which may indicate that computational loss exists after GPT analysis.
+
+#Any additional counts that support your interpretation of sentiment dynamics
+
+ 	Average Emotional Intensity per Character
+
+ 	KING CLAUDIUS: 0.9802; HAMLET: 0.9783
+
+
+2.2 Reporting
+
+#The criteria used to evaluate sentiment accuracy
+
+ 	Criteria 1 Polarity agreement: A sentiment label (positive/negative/neutral) is considered correct only if it exactly matches the human annotation.
+
+ 	Criteria 2 Emotion category agreement (for GPT's results only): For emotion classification, agreement requires the system's single main emotion label to match the human-annotated main emotion.
+
+ 	Criteria 3 Contextual interpretability: Human judgments are based on sentence-level meaning, tone, and rhetorical intent, not merely surface emotional words.
+
+ 	Criteria 4 Handling of ambiguity: For ambiguous sentences, a system label is acceptable if it aligns with the most plausible dominant interpretation selected by the human annotator.
+
+#Challenges encountered during manual annotation and comparison to system outputs
+
+ 	In the experiment, the function has\_enough\_sentences we wrote originally only counted the number of sentences for HAMLET and KING CLAUDIUS and printed them out without actually determining whether the data was sufficient, which revealed a limitation in how “high-confidence sentences” were operationalized in code. Although a threshold of 0.9 was later introduced to filter Flair predictions, this definition remains debatable, as the model's “confidence” score reflects model certainty rather than linguistic clarity, meaning that we only accept sentences that the model is highly certain about, avoiding noise. During manual annotation, decisions made at the single-sentence level were often subjective, which can be contradicted between people and difficult to verify without broader context, especially in Shakespearean dialogue. While Flair outputs only binary labels, “Negative” and “Positive,” with confidence scores, and GPT provides more interpretive flexibility, both systems showed inconsistencies when handling irony and implicit emotions, highlighting the tension between automated efficiency and human interpretive judgment. Nevertheless, manual annotation has the advantage of allowing qualitative descriptions of why a sentence is labeled as “POSITIVE,” “NEGATIVE,” or “NEUTRAL.”
+
+ 	During manual sentiment annotation of the Excel data, we also found that the observed mismatch in sentence numbering can be attributed to sentence reordering introduced during random sampling and dataset merging. For example, in our random sample(100) sheet, row 32, the order of the sentence “To hear him so inclined” by King Claudius in ACT III, SCENE I, is 1672 in all\_sentences\_hamlet.json, but turns out to be 1673 in the sheet. As sentence numbers function solely as reference indices rather than analytical features, the impact on emotion classification results is negligible. Considering the limited scope of the mismatch, manual adjustment was performed to maintain dataset consistency, which is a reasonable solution in exploratory computational text analysis.
+
+ 	The manual annotation process was highly time-consuming, requiring approximately one full day to complete; however, it ensured a relatively high level of annotation quality. A major challenge in annotating dramatic texts lies in the necessity of tracing each line back to its original context, as emotional meaning in plays is often implied through dialogue progression, speaker intention, and situational dynamics rather than being explicitly stated in isolated sentences. While a faster alternative would be to assign emotion labels based on surface-level interpretation or intuition—an approach sometimes adopted given the inherently subjective nature of emotion annotation—such simplification risks overlooking contextual nuance. Furthermore, the use of a fixed set of eight basic emotions inevitably constrains the expressive range of complex literary texts such as Hamlet, where emotional states are frequently ambiguous, layered, or transitional. These limitations highlight the trade-off between annotation efficiency and interpretative fidelity in emotion analysis.
+
+#Examples of sentences with clear sentiment annotation (where the manual annotation matched the system output)
+
+	a. Clear sentiment annotation of anger | negative
+
+       “By heaven, I'll make a ghost of him that lets me!“ (ACTI Scene IV The platform Hamlet)
+
+	b. Clear sentiment annotation of disgust | negative
+
+	“between earth and heaven? We are arrant knaves” (ACT III Scene I. A room in the castle.)
+
+        c. Clear sentiment annotation of sad | negative
+
+	“That, lapsed in time and passion, lets go by” (Scene IV. The Queen's closet.)
+
+	d. Clear sentiment annotation of anticipation | neutral
+
+	“Let the birds fly, and, like the famous ape,” (Scene IV. The Queen's closet.)
+
+	e. Clear sentiment annotation of trust | neutral
+
+	“it is not so:--it begins with Pyrrhus:--” (Scene II. A room in the castle.)
+
+#Examples where sentiment detection was ambiguous or incorrect (compared to your manual annotation)**
+
+	a. Incorrect detection of neutral emotion as anticipation and positive
+
+	“The king doth wake to-night and takes his rouse.”(ACT I Scene IV The platform Hamlet)
+
+	#Hamlet is stating the fact that the King is going to be wake and drinking all night, expressing no emotions
+
+	b. Incorrect detection of anger emotion as neutral
+
+	“Soil our addition; and indeed it takes” (ACT I Scene IV The platform Hamlet)
+
+	#Hamlet is denouncing people who judge a person or a country arbitrarily for a certain drawback but neglecting other good qualities, indicating an angry emotion.
+
+	c. Incorrect direction of sad emotion as joy and positive
+
+	“Thaw and resolve itself into a dew!” (ACT I Scene II A room of state in the castle King Claudius)
+
+	#Hamlet has buried himself in the sadness of his father’s death and wishes his body can die out, indicating the emotion of sadness and desperation.
+
+	d. Incorrect detection of trust emotion as sad and negative
+
+	“We doubt it nothing: heartily farewell.” (ACT I Scene II A room of state in the castle King Claudius)
+
+	#King Claudius is expressing his trust in Cornelius and saying farewell to him. No negative emotion is shown here.
+
+
+#Interpretation of the created plots
+
+	Plot 1: This bar chart compares the sentiment distributions of each act analyzed by Flair and GPT. Both models identify ACT III as containing the most emotional sentences, with negative sentences reaching around the number of 215 in both models. However, distinct contrasts also exist between the results generated by Flair and GPT. The binary classification of the Flair model leads to a stronger polarity. Besides, in this model, both  ACT I and ACT II have more positives (140;124)than negatives(105;108), which may be explained  that the lack of neutral category leads the model to treat neutral emotions or some factual statements as positive. While with the inclusion of the neutral label, GPT shows fewer positives, many neutrals, and stronger dominance of negative sentiment. In addition, there are more negatives than positives in each ACT but relatively more balanced compared to the results shown in Flair.
+
+	Plot 2: This bar chart compares the sentiment distribution across scenes. Both Flair and GPT demonstrate Scene II as the most sentimental. Flair shows Scene II consists of a total number of 718 extremely emotional sentences(negative+positive) and the number displayed by GPT is 564,  indicating that Scene II may have dense conflicts. Flair assigned each sentence to either positive or negative, while GPT includes the third category — neutral, thus, to some degree, mitigate the polarity phenomenon that appeared in Flair. In the results generated by Flair, Scene V has more positive sentences than negative sentences. While, in GPT’s results, each scene has more negatives than positives, indicating that the use of neutral category helps to classify more differentiated emotions.
+
+	Plot 3: This plot compares the sentiment trend of Hamlet and King Claudius. It shows that both Hamlet and King Claudius display rapid and intense sentiment fluctuations throughout the play. And both characters have more negative expressions than positive expressions. But Hamlet’s speech has a dense cluster of negative sentiment values, with frequent  sharp flips between -1 and 1 and very few neutral stretches. Although  King Claudius’s speech is also unstable in sentiment, it  has relatively more neutral values and occasional smoother transitions compared to Hamlet’s.
+
+	Play_claudius_sentiment_development: This plot demonstrates the sentiment development of King Claudius’s speech across the whole play. In general, the plot shows that King Claudius experiences strong fluctuations of sentiment, with frequent sharp jumps, often from +1 directly to -1. In the early part(sentence1-2225), King Claudius has fewer speech lines, which tend to show more positive and neutral values. While in the later sections(sentence2226-), there are more dense negative sentiments, indicating the increasing tension.
+
+	Play_hamlet_sentiment_development: This plot demonstrates the sentiment development of Hamlet’s speech across the whole play. Hamlet’s plot shows a rather dense clustering of negative sentiment and continual dramatic shifts between positive and negative values  across the whole play, which reveals that, compared to King Claudius, Hamlet may experience more internal emotional struggle, strong anger, and desperation.
+
+#Suggestions on how to improve automatic sentiment analysis for Shakespearean texts, based on system or data preprocessing weaknesses.
+
+	Based on both the coding process and evaluation results, improvements can be made at the level of threshold design and data interpretation. Although using a high-confidence threshold (e.g. ≥ 0.9) helps prevent low-confidence predictions from interfering with statistical patterns and improves the reliability of subsequent analyses, fixed thresholds may oversimplify emotionally ambiguous sentences. Flair does not define the "Neutral" or "high-confidence sentences ≥ 0.9" rules. Introducing rule-based logic (such as mapping low-confidence scores to Neutral) can provide a more flexible classification scheme while remaining computationally efficient. For example, if we want three categories (Positive / Negative / Neutral), we can write in our own logic, for example: score < 0.6 → Neutral; score ≥ 0.6 → Use the model’s predicted label (POSITIVE or NEGATIVE). Additionally, adapting sentiment analysis methods to account for Shakespearean language and incorporating broader context beyond single sentences could reduce misclassification. A hybrid approach that combines automatic predictions with selective manual annotation may therefore offer a more balanced and interpretable framework.
+
+
+#Feedback and Evaluation
+
+Did ChatGPT perform as expected? Summarize your experience.
+
+	For part 1.1, ChatGPT can not create concise code as expected unless you tell it as prompts, and even if you tell it to be concise and do not include too many unnecessary codes, it will also give you long lines. The only way is to look at the codes yourself and delete ones that go beyond the project goals. For part 1.3, GPT will also generate codes that conclude unnecessary steps, which makes your code even more complicated so you have to delete it manually.
+
+
+Did you find anything surprising? What are the strengths and weaknesses of the approach?
+
+	There are many more characters than expected in one single play. For our selection, the play Hamlet contains characters such as OPHELIA, the Ghost, REYNALDO, ROSENCRANTZ, GUILDENSTERN, VOLTIMAND, and so on. Valid speakers, however, only include KING CLAUDIUS, HAMLET, and QUEEN GERTRUDE. Therefore, we intuitively selected the former two as required. The strength of the approach is that important heroes are standing out based on the greater number of lines of their dialogue; however, those “edged” but still play a role in driving the plot forward may have the possibility of being overlooked.
+
+	Another super surprising and a little bit scary thing we discovered is that, although GPT did not strictly follow the Prompt, which we consider has its own “cognition,” the results obtained were emotionally reasonable and suitable for the emotion annotation for the sentence. You can trace the case in our random sample(100) sheet in row 48. This row shows that GPT labels the sentence “Why?” as confusion, which is not included in the basic 8 emotions we set in the prompt.
+
+
+What part was the most difficult for you? Where did you struggle the most?
+
+	For Xiaoduan, writing codes and understanding codes related to interaction in Part 1.1.3 is the most difficult, so just leave it to AI and find a casual weekend or anytime relaxing to work it through.
+
+
+How long did you work on the project?
+
+	One night and one noon for Part 1.1 code writing, running for output, and writing feedback. For one afternoon, we discussed the limitations of the method of setting the threshold of larger than 0.9 for “high-confidence sentences,” choosing and deciding on the accuracy criteria. Is the ChatGPT API method the same as Flair? A whole day to write code and run results. The manual annotation process is highly time-consuming (spent a whole day), but of high quality. One afternoon and evening’s two hours to write and to run, test, and revise codes for gaining the excel.
+
+
+Feel free to share any feedback regarding the project.
+Nothing else to add on.
+
